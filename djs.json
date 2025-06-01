@@ -3,7 +3,7 @@
     {
       "id": "dj1",
       "name": "DJ One",
-      "bioHTML": "<p>DJ One has been spinning tracks since the early 2000s, blending techno and house for crowds worldwide.</p>",
+      "bio": "<p>DJ One has been spinning tracks since the early 2000s, blending techno and house for crowds worldwide.</p>",
       "artworkUrl": "https://i.imgur.com/qWOfxOS.png",
       "socials": [
         {
@@ -18,15 +18,15 @@
       "nextEvent": "2025-07-01T20:00:00Z",
       "profileUrl": "https://cutterschoiceradio.nz/index_IND_DJ.html?id=dj1",
       "mixes": [
-        "https://www.mixcloud.com/djone/techno-mix-2025/",
-        "https://www.mixcloud.com/djone/house-party-edition/"
+        "https://www.mixcloud.com/djone/drum-n-bass-session/",
+        "https://www.mixcloud.com/djone/late-night-techno/"
       ]
     },
     {
       "id": "dj2",
       "name": "DJ Two",
-      "bioHTML": "<p>DJ Two brings a unique blend of hip-hop and funk to the dance floor.</p>",
-      "artworkUrl": "https://i.imgur.com/anotherplaceholder.png",
+      "bio": "<p>DJ Two brings a unique blend of hip-hop and funk to the dance floor.</p>",
+      "artworkUrl": "https://i.imgur.com/XYZ1234.png",
       "socials": [
         {
           "name": "SoundCloud",
