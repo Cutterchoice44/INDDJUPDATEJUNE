@@ -16,7 +16,6 @@
         "https://www.mixcloud.com/archietech/special-eklektik/"
       ]
     },
-
     {
       "id": "2fa20f0e-5fd7-462b-8cb5-1ae6f8edb763",
       "name": "Armands Melkis",
@@ -31,7 +30,6 @@
         "https://www.mixcloud.com/armandsmelkis/get-in-the-groove-sunday/"
       ]
     },
-
     {
       "id": "5b4d1c12-9e11-4a43-bb21-7f9e0efb9a33",
       "name": "Barrcode",
@@ -47,7 +45,5 @@
         "https://www.mixcloud.com/barrcode/raw-techno-live/"
       ]
     }
-
-    /* …add one object per DJ, each with a unique "id" that matches the `?id=` you’ll pass in the URL. */
   ]
 }
