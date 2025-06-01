@@ -1,53 +1,71 @@
 /**
- * script_IND_DJ.js  (fixed “fetchfetch” → “fetch”)
- * Loads a single DJ’s profile and ensures each Mixcloud <iframe> uses loading="lazy".
+ * script_IND_DJ.js  (robust against JSON‐rooted objects)
+ * 
+ * 1) Reads ?id= from the URL. 
+ * 2) Fetches djs.json. 
+ * 3) Looks inside either the top‐level array or a “djs” array within the JSON. 
+ * 4) Finds the matching DJ object, populates the page, and then injects Mixcloud iframes.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('📀 script_IND_DJ.js: DOMContentLoaded fired.');
 
-  // 1. Determine DJ ID from query string (?id=).
+  // 1) Get “id” param from URL:
   const params = new URLSearchParams(window.location.search);
   const djId = params.get('id');
   if (!djId) {
     document.querySelector('.profile-wrapper').innerHTML =
-      '<p class="error">Unknown DJ. Please check the link.</p>';
-    console.warn('⚠️ No ?id= in URL.');
+      '<p class="error">Unknown DJ ID. Please check your link.</p>';
+    console.warn('⚠️ No ?id= parameter in URL.');
     return;
   }
   console.log(`📀 Found DJ ID: ${djId}`);
 
-  // 2. Fetch DJ data from JSON (relative path).
-  //    Make sure this path actually matches where djs.json lives on your server.
-  fetch('djs.json')                    // ← FIXED: was “fetchfetch(…)” by mistake
+  // 2) Fetch DJ data from djs.json (make sure this path is correct).
+  fetch('djs.json')
     .then((resp) => {
       console.log('📀 Fetch response status:', resp.status);
       if (!resp.ok) throw new Error(`Failed to load djs.json (status ${resp.status})`);
       return resp.json();
     })
-    .then((allDJs) => {
-      // 3. Find the single DJ object whose “id” matches djId:
+    .then((rawData) => {
+      // 3) Determine where the actual array lives:
+      //    - If rawData is already an Array, use it.
+      //    - Otherwise, look for rawData.djs (or change "djs" to whatever key your JSON uses).
+      let allDJs;
+      if (Array.isArray(rawData)) {
+        allDJs = rawData;
+      } else if (Array.isArray(rawData.djs)) {
+        allDJs = rawData.djs;
+      } else {
+        console.warn('⚠️ Unexpected JSON structure—no top‐level array or “djs” array found.');
+        allDJs = [];
+      }
+
+      // 4) Now find the single DJ whose “id” matches djId (as string):
       const dj = allDJs.find((item) => String(item.id) === String(djId));
       if (!dj) {
         document.querySelector('.profile-wrapper').innerHTML =
-          '<p class="error">DJ not found. Please check the link.</p>';
-        console.warn(`⚠️ No DJ matching id=${djId}`);
+          '<p class="error">DJ not found. Please check the ID.</p>';
+        console.warn(`⚠️ No DJ matching id="${djId}" in the JSON.`);
         return;
       }
 
-      // a) Populate name & bio
+      // 5) Populate the page with dj.name, dj.bio, artwork, socials, etc. ↓
+
+      // a) Name & Bio
       document.getElementById('dj-name').textContent = dj.name || '—';
       const bioDiv = document.getElementById('dj-bio');
       bioDiv.innerHTML = dj.bio
         ? dj.bio
         : '<p>No biography available.</p>';
 
-      // b) Populate artwork
+      // b) Artwork (use a placeholder if none)
       const artEl = document.getElementById('dj-artwork');
       if (dj.artworkUrl) {
         artEl.src = dj.artworkUrl;
       } else {
-        artEl.src = 'https://i.imgur.com/qWOfxOS.png'; // placeholder
+        artEl.src = 'https://i.imgur.com/qWOfxOS.png';
       }
 
       // c) Social links
@@ -67,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         socialList.innerHTML = '<li>No socials available</li>';
       }
 
-      // d) “Add to Calendar” (if nextEvent exists)
+      // d) “Add to Calendar” button if nextEvent exists
       const calendarBtn = document.getElementById('calendar-btn');
       if (dj.nextEvent) {
         calendarBtn.disabled = false;
@@ -82,45 +100,44 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
 
-      // e) Insert Mixcloud mixes
+      // e) Mixcloud embeds
       if (Array.isArray(dj.mixes) && dj.mixes.length) {
-        console.log('📀 Found mixes array:', dj.mixes);
+        console.log('📀 Found mixes array for this DJ:', dj.mixes);
         dj.mixes.forEach((mixUrl) => {
           appendMixIframe(mixUrl);
         });
       } else {
-        // If there are no mixes listed in djs.json, you can show a placeholder:
+        // If there are no mixes listed, show a placeholder message:
         const mixesContainer = document.getElementById('mixes-list');
         mixesContainer.innerHTML = '<p>No mixes available.</p>';
       }
     })
     .catch((err) => {
       console.error('❌ Error loading DJ data:', err);
-      const e = document.querySelector('.profile-wrapper');
-      e.innerHTML = '<p class="error">Error loading DJ profile. Check console for details.</p>';
+      const wrapper = document.querySelector('.profile-wrapper');
+      wrapper.innerHTML =
+        '<p class="error">Error loading DJ profile. Please check the console for details.</p>';
     });
 
 
-  // 4. Helper: create a Mixcloud <iframe loading="lazy"> + play button
+  /********** Helper to inject a Mixcloud <iframe loading="lazy"> **********/
   function appendMixIframe(mixUrl) {
     const mixesContainer = document.getElementById('mixes-list');
     const wrapper = document.createElement('div');
     wrapper.classList.add('mix-show');
 
-    // Create the actual <iframe> and force lazy loading
+    // Create the iframe with loading="lazy"
     const iframe = document.createElement('iframe');
-    iframe.setAttribute('loading', 'lazy'); // ← Lazy load as requested
+    iframe.setAttribute('loading', 'lazy');
 
-    // Turn a “normal” Mixcloud link into its embed URL form:
-    //   * If it already ends with a slash, replace “mixcloud.com/” → “mixcloud.com/embed/” and append “?light=1”
-    //   * Otherwise, just tack “/embed/?light=1” onto the end.
+    // Turn a Mixcloud page URL into its embed URL form:
     if (mixUrl.endsWith('/')) {
       iframe.src = mixUrl.replace('mixcloud.com/', 'mixcloud.com/embed/') + 'light=1';
     } else {
       iframe.src = mixUrl + '/embed/?light=1';
     }
 
-    // Fallback: in case the URL is malformed or missing “mixcloud.com/…”:
+    // If it still doesn't look like an embed URL, bail and show error text:
     if (!iframe.src.includes('mixcloud.com/embed/')) {
       console.warn(`⚠️ Invalid Mixcloud URL: ${mixUrl}`);
       const errMsg = document.createElement('p');
@@ -130,10 +147,9 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Add the iframe to the page
     wrapper.appendChild(iframe);
 
-    // (Optional) A “Listen on Mixcloud” link underneath:
+    // Optional “Listen on Mixcloud” button below the iframe:
     const btn = document.createElement('button');
     btn.textContent = 'Listen on Mixcloud';
     btn.addEventListener('click', () => {
@@ -145,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  // 5. Utility: Google Calendar link generator (unchanged)
+  /********** Calendar‐link helper (unchanged) **********/
   function generateGoogleCalendarLink(title, dateObj, descriptionUrl) {
     const start = formatDateForGCal(dateObj);
     const endDate = new Date(dateObj.getTime() + 2 * 60 * 60 * 1000);
