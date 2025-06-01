@@ -1,43 +1,53 @@
 {
   "djs": [
     {
-      "id": "dj1",
-      "name": "DJ One",
-      "bio": "<p>DJ One has been spinning tracks since the early 2000s, blending techno and house for crowds worldwide.</p>",
-      "artworkUrl": "https://i.imgur.com/qWOfxOS.png",
+      "id": "25b015d2-01a5-4abb-8e2c-c5d425e0483d",
+      "name": "ArchieTech",
+      "bio": "<p>ArchieTech, the Tasmanian Connection, has been delivering electro-breakbeat since the 90s…</p>",
+      "artworkUrl": "https://i.imgur.com/archietech.jpg",
       "socials": [
-        {
-          "name": "Facebook",
-          "url": "https://facebook.com/djone"
-        },
-        {
-          "name": "Instagram",
-          "url": "https://instagram.com/djone"
-        }
+        { "name": "Facebook",   "url": "https://facebook.com/archietech" },
+        { "name": "Instagram",  "url": "https://instagram.com/archietech" }
       ],
-      "nextEvent": "2025-07-01T20:00:00Z",
-      "profileUrl": "https://cutterschoiceradio.nz/index_IND_DJ.html?id=dj1",
+      "nextEvent": "2025-05-25T07:00:00Z",
+      "profileUrl": "https://cutterschoiceradio.nz/index_IND_DJ.html?id=25b015d2-01a5-4abb-8e2c-c5d425e0483d",
       "mixes": [
-        "https://www.mixcloud.com/djone/drum-n-bass-session/",
-        "https://www.mixcloud.com/djone/late-night-techno/"
+        "https://www.mixcloud.com/archietech/sunday-sets-2025/",
+        "https://www.mixcloud.com/archietech/special-eklektik/"
       ]
     },
+
     {
-      "id": "dj2",
-      "name": "DJ Two",
-      "bio": "<p>DJ Two brings a unique blend of hip-hop and funk to the dance floor.</p>",
-      "artworkUrl": "https://i.imgur.com/XYZ1234.png",
+      "id": "2fa20f0e-5fd7-462b-8cb5-1ae6f8edb763",
+      "name": "Armands Melkis",
+      "bio": "<p>Armands Melkis brings deep-house and soulful grooves every Sunday evening…</p>",
+      "artworkUrl": "https://i.imgur.com/armandsmelkis.jpg",
       "socials": [
-        {
-          "name": "SoundCloud",
-          "url": "https://soundcloud.com/djtwo"
-        }
+        { "name": "SoundCloud", "url": "https://soundcloud.com/armandsmelkis" }
       ],
-      "nextEvent": "2025-08-15T18:00:00Z",
-      "profileUrl": "https://cutterschoiceradio.nz/index_IND_DJ.html?id=dj2",
+      "nextEvent": "2025-05-26T05:00:00Z",
+      "profileUrl": "https://cutterschoiceradio.nz/index_IND_DJ.html?id=2fa20f0e-5fd7-462b-8cb5-1ae6f8edb763",
       "mixes": [
-        "https://www.mixcloud.com/djtwo/funk-journey/"
+        "https://www.mixcloud.com/armandsmelkis/get-in-the-groove-sunday/"
+      ]
+    },
+
+    {
+      "id": "5b4d1c12-9e11-4a43-bb21-7f9e0efb9a33",
+      "name": "Barrcode",
+      "bio": "<p>Barrcode presents live und direkt from Thursday 5–7pm, spinning industrial techno…</p>",
+      "artworkUrl": "https://i.imgur.com/barrcode.jpg",
+      "socials": [
+        { "name": "Facebook",  "url": "https://facebook.com/barrcode" },
+        { "name": "Instagram", "url": "https://instagram.com/barrcode" }
+      ],
+      "nextEvent": "2025-05-23T04:00:00Z",
+      "profileUrl": "https://cutterschoiceradio.nz/index_IND_DJ.html?id=5b4d1c12-9e11-4a43-bb21-7f9e0efb9a33",
+      "mixes": [
+        "https://www.mixcloud.com/barrcode/raw-techno-live/"
       ]
     }
+
+    /* …add one object per DJ, each with a unique "id" that matches the `?id=` you’ll pass in the URL. */
   ]
 }
