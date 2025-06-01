@@ -8,45 +8,59 @@
   margin: 0;
   padding: 0;
 }
-/* Brick background for entire page */
-html, body {
-  background: url("/images/bricks.png") center center / cover no-repeat fixed;
-  background-color: var(--dark);
-  color: var(--light);
-  font-family: Arial, sans-serif;
-  height: 100%;
-}
 
-/* ─── NAVIGATION BAR ADJUSTMENTS ────────────────────────────────────────── */
-/* Drop the bar slightly, and add thin black lines above/below the center link */
+/* ─── NAVIGATION BAR ─────────────────────────────────────────────────── */
+/* Drop the bar down further and draw thick black lines across its full width */
 #main-nav {
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
   width: 100% !important;
-  padding: 0.25rem 0.35rem !important; /* unchanged vertical padding */
-  margin: 0.25rem 0 0 0 !important;    /* drop the bar down slightly */
-  box-sizing: border-box !important;
+
+  /* Drop the bar further from the top of the page */
+  margin-top: 1rem !important;       /* adjust as needed to move it lower */
+
+  /* Keep the vertical padding as before */
+  padding: 0.25rem 0.35rem !important;
   background-color: var(--teal) !important;
-  position: relative;
-  z-index: 1000;
-  border-top: 2px solid var(--teal) !important;    /* keep teal edges */
-  border-bottom: 2px solid var(--teal) !important;
+  position: relative !important;
+  z-index: 1000 !important;
+  border: none !important;           /* remove any existing borders */
+}
+
+/* Full-width black line above the entire nav */
+#main-nav::before {
+  content: "";
+  position: absolute;
+  top: -2px;             /* place just above the teal */
+  left: 0;
+  width: 100%;
+  height: 2px;           /* twice as thick as before */
+  background-color: #000;
+  z-index: 2;
+}
+
+/* Full-width black line below the entire nav */
+#main-nav::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;          /* place just below the teal */
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #000;
+  z-index: 2;
 }
 
 #main-nav .nav-item {
   flex: 1 !important;
 }
-
 #main-nav .nav-left {
   text-align: left !important;
 }
-
 #main-nav .nav-center {
   text-align: center !important;
-  position: relative; /* for pseudo-elements */
 }
-
 #main-nav .nav-right {
   text-align: right !important;
 }
@@ -59,36 +73,11 @@ html, body {
   text-decoration: none !important;
   margin: 0 0.5rem !important;
 }
-
 #main-nav .social-icon {
   margin-left: 0.5rem !important;
   font-size: 1.2rem !important;
   vertical-align: middle !important;
-}
-
-/* Thin black lines above and below the center link text */
-#main-nav .nav-center::before,
-#main-nav .nav-center::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background-color: #000;
-  z-index: 2;
-}
-
-#main-nav .nav-center::before {
-  top: -1px; /* overlap the very top edge of the teal */
-}
-
-#main-nav .nav-center::after {
-  bottom: -1px; /* overlap the very bottom edge of the teal */
-}
-
-#main-nav .nav-center a {
-  position: relative;
-  z-index: 3; /* sit above the black lines */
+  color: #fff !important;
 }
 
 @media (max-width: 768px) {
@@ -107,8 +96,16 @@ html, body {
   }
 }
 
-/* ─── PROFILE WRAPPER & GRID ────────────────────────────────────────────── */
-/* Profile wrapper */
+/* ─── Brick background for entire page ────────────────────────────────── */
+html, body {
+  background: url("/images/bricks.png") center center / cover no-repeat fixed;
+  background-color: var(--dark);
+  color: var(--light);
+  font-family: Arial, sans-serif;
+  height: 100%;
+}
+
+/* ─── PROFILE WRAPPER & GRID ───────────────────────────────────────────── */
 .profile-wrapper {
   margin: 20px;
   border: 2px solid var(--teal);
@@ -267,7 +264,7 @@ html, body {
   cursor: pointer;
 }
 
-/* MOBILE RESPONSIVE */
+/* ─── MOBILE RESPONSIVE ───────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .container {
     display: block;
@@ -286,7 +283,7 @@ html, body {
     font-size: 3rem;
   }
 
-  /* ↓ Add this to halve your bio paragraph size ↓ */
+  /* ↓ Halve bio paragraph size on mobile ↓ */
   .bio-section p {
     font-size: 1.1rem;
   }
