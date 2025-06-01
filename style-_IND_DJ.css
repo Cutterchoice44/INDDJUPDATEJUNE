@@ -10,22 +10,39 @@
 }
 
 /* ─── NAVIGATION BAR ─────────────────────────────────────────────────── */
-/* Drop the bar down slightly and draw thick black lines inside the teal block */
+/* Drop the bar down further and draw thick black lines inside the teal block */
 #main-nav {
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
   width: 100% !important;
 
-  /* Drop the bar a few millimetres from the top of the page */
-  margin-top: 1.3rem !important;  
+  /* Drop the bar further from the top of the page */
+  margin-top: 1.5rem !important; /* increased from 1.3rem */
 
   /* Increase top and bottom padding so text sits nicely between thick lines */
-  padding: 0.5rem 0.35rem !important; 
+  padding: 0.8rem 0.35rem !important; /* increased vertical padding */
   background-color: var(--teal) !important;
   position: relative !important;
   z-index: 1000 !important;
   border: none !important; /* remove any existing borders */
+}
+
+/* Ensure each nav item’s text is vertically centered */
+#main-nav .nav-item {
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+#main-nav .nav-left {
+  text-align: left !important;
+}
+#main-nav .nav-center {
+  text-align: center !important;
+}
+#main-nav .nav-right {
+  text-align: right !important;
 }
 
 /* Thick black line inside the teal block, at its very top edge */
@@ -52,19 +69,6 @@
   z-index: 2;
 }
 
-#main-nav .nav-item {
-  flex: 1 !important;
-}
-#main-nav .nav-left {
-  text-align: left !important;
-}
-#main-nav .nav-center {
-  text-align: center !important;
-}
-#main-nav .nav-right {
-  text-align: right !important;
-}
-
 #main-nav a {
   color: #fff !important;
   font-family: 'Bebas Neue', sans-serif !important;
@@ -72,6 +76,7 @@
   text-transform: uppercase !important;
   text-decoration: none !important;
   margin: 0 0.5rem !important;
+  line-height: 1 !important; /* ensure consistent line height */
 }
 #main-nav .social-icon {
   margin-left: 0.5rem !important;
