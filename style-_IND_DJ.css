@@ -10,15 +10,15 @@
 }
 
 /* ─── NAVIGATION BAR ─────────────────────────────────────────────────── */
-/* Drop the bar down slightly and draw thick black lines across its full width */
+/* Drop the bar down slightly and draw thick black lines inside the teal block */
 #main-nav {
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
   width: 100% !important;
 
-  /* Drop the bar further from the top of the page */
-  margin-top: 1rem !important;
+  /* Drop the bar a bit further from the top of the page */
+  margin-top: 1.2rem !important;  /* increased from 1rem */
 
   /* Preserve the original vertical padding */
   padding: 0.25rem 0.35rem !important;
@@ -28,26 +28,26 @@
   border: none !important; /* remove any existing borders */
 }
 
-/* Full-width black line above the entire nav */
+/* Black line inside the teal block, at its very top */
 #main-nav::before {
   content: "";
   position: absolute;
-  top: -2px; /* place just above the teal */
+  top: 0;               /* place at the top edge of the teal */
   left: 0;
   width: 100%;
-  height: 2px; /* twice as thick */
+  height: 4px;          /* twice as thick as before (4px) */
   background-color: #000;
   z-index: 2;
 }
 
-/* Full-width black line below the entire nav */
+/* Black line inside the teal block, at its very bottom */
 #main-nav::after {
   content: "";
   position: absolute;
-  bottom: -2px; /* place just below the teal */
+  bottom: 0;            /* place at the bottom edge of the teal */
   left: 0;
   width: 100%;
-  height: 2px;
+  height: 4px;          /* twice as thick as before (4px) */
   background-color: #000;
   z-index: 2;
 }
