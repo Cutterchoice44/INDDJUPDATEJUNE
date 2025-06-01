@@ -10,17 +10,109 @@
 }
 /* Brick background for entire page */
 html, body {
-background: url("/images/bricks.png") center center / cover no-repeat fixed;
+  background: url("/images/bricks.png") center center / cover no-repeat fixed;
   background-color: var(--dark);
   color: var(--light);
   font-family: Arial, sans-serif;
   height: 100%;
 }
+
+/* ─── NAVIGATION BAR ADJUSTMENTS ────────────────────────────────────────── */
+/* Drop the bar slightly, and add thin black lines above/below the center link */
+#main-nav {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 0.25rem 0.35rem !important; /* unchanged vertical padding */
+  margin: 0.25rem 0 0 0 !important;    /* drop the bar down slightly */
+  box-sizing: border-box !important;
+  background-color: var(--teal) !important;
+  position: relative;
+  z-index: 1000;
+  border-top: 2px solid var(--teal) !important;    /* keep teal edges */
+  border-bottom: 2px solid var(--teal) !important;
+}
+
+#main-nav .nav-item {
+  flex: 1 !important;
+}
+
+#main-nav .nav-left {
+  text-align: left !important;
+}
+
+#main-nav .nav-center {
+  text-align: center !important;
+  position: relative; /* for pseudo-elements */
+}
+
+#main-nav .nav-right {
+  text-align: right !important;
+}
+
+#main-nav a {
+  color: #fff !important;
+  font-family: 'Bebas Neue', sans-serif !important;
+  font-size: 2rem !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+  margin: 0 0.5rem !important;
+}
+
+#main-nav .social-icon {
+  margin-left: 0.5rem !important;
+  font-size: 1.2rem !important;
+  vertical-align: middle !important;
+}
+
+/* Thin black lines above and below the center link text */
+#main-nav .nav-center::before,
+#main-nav .nav-center::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #000;
+  z-index: 2;
+}
+
+#main-nav .nav-center::before {
+  top: -1px; /* overlap the very top edge of the teal */
+}
+
+#main-nav .nav-center::after {
+  bottom: -1px; /* overlap the very bottom edge of the teal */
+}
+
+#main-nav .nav-center a {
+  position: relative;
+  z-index: 3; /* sit above the black lines */
+}
+
+@media (max-width: 768px) {
+  #main-nav .nav-left,
+  #main-nav .nav-right {
+    display: none !important;
+  }
+  #main-nav .nav-center {
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+  }
+  #main-nav .nav-center a {
+    display: inline-block !important;
+    margin: 0 auto !important;
+  }
+}
+
+/* ─── PROFILE WRAPPER & GRID ────────────────────────────────────────────── */
 /* Profile wrapper */
 .profile-wrapper {
   margin: 20px;
   border: 2px solid var(--teal);
-  background: rgba(0,0,0,0.7); /* optional overlay for readability */
+  background: rgba(0, 0, 0, 0.7); /* optional overlay for readability */
 }
 
 /* Grid container */
@@ -194,34 +286,6 @@ background: url("/images/bricks.png") center center / cover no-repeat fixed;
     font-size: 3rem;
   }
 
-  .socials-section h2,
-  .mixes-section h2 {
-    font-size: 1.5rem;
-  }
-
-  .mix-show iframe {
-    height: 50px;
-  }
-}
-/* MOBILE RESPONSIVE */
-@media (max-width: 768px) {
-  .container {
-    display: block;
-  }
-
-  .bio-section,
-  .column-mid,
-  .column-right {
-    width: 100%;
-    padding: 15px;
-    border-right: none;
-    border-bottom: 2px solid var(--teal);
-  }
-
-  .bio-section h1 {
-    font-size: 3rem;
-  }
-
   /* ↓ Add this to halve your bio paragraph size ↓ */
   .bio-section p {
     font-size: 1.1rem;
@@ -235,4 +299,10 @@ background: url("/images/bricks.png") center center / cover no-repeat fixed;
   .mix-show iframe {
     height: 50px;
   }
+}
+
+.error {
+  text-align: center;
+  color: #f55;
+  margin-top: 2rem;
 }
