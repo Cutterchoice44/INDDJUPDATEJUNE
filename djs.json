@@ -1,0 +1,43 @@
+{
+  "djs": [
+    {
+      "id": "dj1",
+      "name": "DJ One",
+      "bioHTML": "<p>DJ One has been spinning tracks since the early 2000s, blending techno and house for crowds worldwide.</p>",
+      "artworkUrl": "https://i.imgur.com/qWOfxOS.png",
+      "socials": [
+        {
+          "name": "Facebook",
+          "url": "https://facebook.com/djone"
+        },
+        {
+          "name": "Instagram",
+          "url": "https://instagram.com/djone"
+        }
+      ],
+      "nextEvent": "2025-07-01T20:00:00Z",
+      "profileUrl": "https://cutterschoiceradio.nz/index_IND_DJ.html?id=dj1",
+      "mixes": [
+        "https://www.mixcloud.com/djone/techno-mix-2025/",
+        "https://www.mixcloud.com/djone/house-party-edition/"
+      ]
+    },
+    {
+      "id": "dj2",
+      "name": "DJ Two",
+      "bioHTML": "<p>DJ Two brings a unique blend of hip-hop and funk to the dance floor.</p>",
+      "artworkUrl": "https://i.imgur.com/anotherplaceholder.png",
+      "socials": [
+        {
+          "name": "SoundCloud",
+          "url": "https://soundcloud.com/djtwo"
+        }
+      ],
+      "nextEvent": "2025-08-15T18:00:00Z",
+      "profileUrl": "https://cutterschoiceradio.nz/index_IND_DJ.html?id=dj2",
+      "mixes": [
+        "https://www.mixcloud.com/djtwo/funk-journey/"
+      ]
+    }
+  ]
+}
