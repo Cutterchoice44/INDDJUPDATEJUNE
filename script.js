@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 2. Fetch DJ data from JSON (relative path).
   //    Make sure this path actually matches where djs.json lives on your server.
-  fetch('data/djs.json')     // <–– Try removing the leading slash, or adjust as needed
+  fetchfetch('djs.json')     // <–– Try removing the leading slash, or adjust as needed
     .then((resp) => {
       console.log('📀 Fetch response status:', resp.status);
       if (!resp.ok) throw new Error(`Failed to load djs.json (status ${resp.status})`);
