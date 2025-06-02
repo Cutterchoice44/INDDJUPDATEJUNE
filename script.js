@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const djId = params.get('id');
   if (!djId) {
     // If there is no ?id= parameter, show an error inside .profile-wrapper
-    document.querySelector('.profile-wrapper').innerHTML = 
+    document.querySelector('.profile-wrapper').innerHTML =
       '<p class="error">Unknown DJ ID. Please check your link.</p>';
     console.warn('⚠️ No “?id=” found in the URL.');
     return;
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // 4. Find the DJ object whose “id” matches djId
       const dj = allDJs.find((item) => String(item.id) === String(djId));
       if (!dj) {
-        document.querySelector('.profile-wrapper').innerHTML = 
+        document.querySelector('.profile-wrapper').innerHTML =
           '<p class="error">DJ not found. Please check the ID.</p>';
         console.warn(`⚠️ No DJ object with id="${djId}" in djs.json.`);
         return;
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
       nameEl.textContent = dj.name || '—';
 
       const bioEl = document.getElementById('dj-bio');
-      // We expect your JSON to have changed “bioHTML” → “bio”
+      // We expect your JSON to use "bio"
       if (dj.bio) {
         bioEl.innerHTML = dj.bio;
       } else {
@@ -71,7 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (dj.artworkUrl) {
         artworkImg.src = dj.artworkUrl;
       } else {
-        // Fallback placeholder if no artworkUrl provided
         artworkImg.src = 'https://i.imgur.com/qWOfxOS.png';
       }
 
@@ -106,7 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
           window.open(calLink, '_blank');
         });
       } else {
-        // If no nextEvent provided, keep it disabled
         calendarBtn.disabled = true;
       }
 
@@ -143,8 +141,8 @@ document.addEventListener('DOMContentLoaded', () => {
     iframe.setAttribute('loading', 'lazy');
 
     // Convert a standard Mixcloud link into the embed URL form:
-    //    If it already ends with '/', replace “mixcloud.com/” → “mixcloud.com/embed/” and add “light=1”
-    //    Otherwise, append “/embed/?light=1”
+    //    If it ends with '/', replace “mixcloud.com/” → “mixcloud.com/embed/” + 'light=1'
+    //    Otherwise, append '/embed/?light=1'
     if (mixUrl.endsWith('/')) {
       iframe.src = mixUrl.replace('mixcloud.com/', 'mixcloud.com/embed/') + 'light=1';
     } else {
@@ -163,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     wrapper.appendChild(iframe);
 
-    // Optional: a “Listen on Mixcloud” button below
+    // Optional: a “Listen on Mixcloud” button below the iframe
     const btn = document.createElement('button');
     btn.textContent = 'Listen on Mixcloud';
     btn.addEventListener('click', () => {
@@ -186,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function generateGoogleCalendarLink(title, dateObj, descriptionUrl) {
     const pad = (num) => String(num).padStart(2, '0');
 
-    // Start: format YYYYMMDDTHHMMSSZ
+    // Start date formatting (YYYYMMDDTHHMMSSZ)
     const yyyy = dateObj.getUTCFullYear();
     const mm = pad(dateObj.getUTCMonth() + 1);
     const dd = pad(dateObj.getUTCDate());
@@ -195,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const SS = pad(dateObj.getUTCSeconds());
     const start = `${yyyy}${mm}${dd}T${HH}${MM}${SS}Z`;
 
-    // End: 2 hours later
+    // End date: 2 hours later
     const endDate = new Date(dateObj.getTime() + 2 * 60 * 60 * 1000);
     const yyyy2 = endDate.getUTCFullYear();
     const mm2 = pad(endDate.getUTCMonth() + 1);
