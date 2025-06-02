@@ -10,9 +10,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>DJ Profile – Cutters Choice Radio</title>
 
-  <!-- Global styles (unchanged) -->
+  <!-- Global styles (site‐wide) -->
   <link rel="stylesheet" href="style.css?v=1748649274040" />
-  <!-- Profile-specific styles (see step 2 below) -->
+  <!-- Profile‐specific styles -->
   <link rel="stylesheet" href="style-_IND_DJ.css?v=1748649274040" />
 
   <!-- Bebas Neue (for nav) -->
@@ -20,7 +20,7 @@
     href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
     rel="stylesheet"
   />
-  <!-- FontAwesome (for the social icons in nav) -->
+  <!-- FontAwesome (for nav social icons) -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -29,7 +29,7 @@
     referrerpolicy="no-referrer"
   />
 
-  <!-- INLINE NAV STYLING (exactly as before) -->
+  <!-- INLINE NAV STYLING (matches your main site) -->
   <style>
     :root { --brand-teal: #5A8785; }
 
@@ -39,18 +39,12 @@
       justify-content: space-between !important;
       align-items: center !important;
       width: 100% !important;
-
-      /* ↓ Make the bar thinner by reducing top/bottom padding */
       padding: 0.25rem 0.35rem !important;
       margin: 0 !important;
       box-sizing: border-box !important;
-
-      /* Force a solid teal background so bricks never show through */
       background-color: var(--brand-teal) !important;
-      /* Sit above the brick‐patterned <html> background */
       position: relative;
       z-index: 1000;
-
       border-top:    2px solid var(--brand-teal) !important;
       border-bottom: 2px solid var(--brand-teal) !important;
     }
@@ -92,7 +86,7 @@
 </head>
 
 <body>
-  <!-- ─── NAV (Exact same as on your main site) ─────────────────────────────────────────────────── -->
+  <!-- ─── NAV BAR ─────────────────────────────────────────────────────────────────── -->
   <nav id="main-nav">
     <div class="nav-item nav-left">
       <a href="our-story.html">OUR STORY</a>
@@ -111,7 +105,7 @@
     </div>
   </nav>
 
-  <!-- ─── REST OF YOUR DJ PROFILE CONTENT ───────────────────────────────────────────────────── -->
+  <!-- ─── DJ PROFILE CONTENT ───────────────────────────────────────────────────────── -->
   <div class="profile-wrapper">
     <div class="container">
       <!-- LEFT COLUMN: BIO -->
@@ -132,13 +126,11 @@
             loading="lazy"
           />
         </div>
-
         <div class="info-block">
           <div class="socials-section">
             <h2>Socials / Contact</h2>
             <ul id="social-links"></ul>
           </div>
-
           <div class="reminder-section">
             <h2>Get Reminded</h2>
             <div class="reminder-line"></div>
@@ -150,12 +142,7 @@
       <!-- RIGHT COLUMN: MIXES -->
       <section class="column-right mixes-section">
         <h2>Mixes</h2>
-        <!--
-          ↓ Mixcloud iframes will be injected here by script_IND_DJ.js.
-          Every iframe is now created with loading="lazy" (see JS, below).
-        -->
         <div class="mixes-list" id="mixes-list"></div>
-
         <div class="mix-input">
           <input
             type="text"
