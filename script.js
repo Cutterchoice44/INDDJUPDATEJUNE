@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
   const djId = params.get('id');
   if (!djId) {
-    // If there is no ?id= parameter, show an error inside .profile-wrapper
     document.querySelector('.profile-wrapper').innerHTML =
       '<p class="error">Unknown DJ ID. Please check your link.</p>';
     console.warn('⚠️ No “?id=” found in the URL.');
@@ -59,7 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
       nameEl.textContent = dj.name || '—';
 
       const bioEl = document.getElementById('dj-bio');
-      // We expect your JSON to use "bio"
       if (dj.bio) {
         bioEl.innerHTML = dj.bio;
       } else {
