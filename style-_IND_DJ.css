@@ -1,3 +1,4 @@
+/* ─── VARIABLES & RESET ─────────────────────────────────────────────────── */
 :root {
   --teal: #5A8785;
   --dark: #000;
@@ -97,7 +98,7 @@
   }
 }
 
-/* ─── Brick background for entire page ────────────────────────────────── */
+/* ─── BACKGROUND & TYPOGRAPHY ───────────────────────────────────────────── */
 html, body {
   background: url("/images/bricks.png") center center / cover no-repeat fixed;
   background-color: var(--dark);
@@ -106,21 +107,22 @@ html, body {
   height: 100%;
 }
 
-/* ─── PROFILE WRAPPER & GRID ───────────────────────────────────────────── */
+/* ─── PROFILE WRAPPER & GRID LAYOUT ───────────────────────────────────── */
 .profile-wrapper {
   margin: 20px;
   border: 2px solid var(--teal);
   background: rgba(0, 0, 0, 0.7); /* optional overlay for readability */
+  overflow: hidden;
 }
 
-/* Grid container */
 .container {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
   gap: 20px;
+  width: 100%;
 }
 
-/* BIO */
+/* ─── BIO SECTION (Left Column) ────────────────────────────────────────── */
 .bio-section {
   padding: 20px;
   border-right: 2px solid var(--teal);
@@ -131,13 +133,14 @@ html, body {
   border-bottom: 2px solid var(--teal);
   padding-bottom: 10px;
   margin-bottom: 10px;
+  color: var(--teal);
 }
 .bio-section p {
   font-size: 2.2rem;
   line-height: 1.5;
 }
 
-/* MIDDLE: ARTWORK + SOCIALS + REMINDER */
+/* ─── MIDDLE COLUMN: ARTWORK + SOCIALS + REMINDER ─────────────────────── */
 .column-mid {
   border-right: 2px solid var(--teal);
   display: flex;
@@ -167,6 +170,7 @@ html, body {
   border-bottom: 2px solid var(--teal);
   padding-bottom: 5px;
   margin-bottom: 10px;
+  color: var(--teal);
 }
 
 /* Social links */
@@ -180,8 +184,11 @@ html, body {
   color: var(--light);
   text-decoration: none;
 }
+.socials-section a:hover {
+  text-decoration: underline;
+}
 
-/* Reminder */
+/* Reminder (Add to Calendar) */
 .reminder-section {
   margin-top: auto;
   display: flex;
@@ -192,7 +199,6 @@ html, body {
   border-bottom: 2px dashed var(--teal);
   margin: 0 10px;
 }
-/* Calendar button styling */
 #calendar-btn {
   padding: 0.5rem 1rem;
   background: var(--teal);
@@ -202,7 +208,6 @@ html, body {
   cursor: pointer;
   text-transform: uppercase;
   margin-top: 0.5rem;
-  /* Align to the right of the dashed line */
   align-self: flex-end;
 }
 #calendar-btn:disabled {
@@ -210,13 +215,14 @@ html, body {
   cursor: default;
 }
 
-/* RIGHT: MIXES */
+/* ─── RIGHT COLUMN: MIXES ───────────────────────────────────────────────── */
 .column-right {
   display: flex;
   flex-direction: column;
 }
 .mixes-section {
   padding: 20px;
+  flex: 1;
 }
 .mixes-list {
   flex: 1;
@@ -233,6 +239,8 @@ html, body {
   width: 100%;
   height: 60px;
   border: none;
+  display: block;
+  margin-bottom: 5px;
 }
 .mix-show button {
   background: none;
@@ -241,10 +249,9 @@ html, body {
   text-decoration: underline;
   cursor: pointer;
   font-size: 0.9rem;
-  margin-top: 5px;
 }
 
-/* Mix input */
+/* Mix input box + button */
 .mix-input input {
   width: 100%;
   padding: 10px;
@@ -265,13 +272,14 @@ html, body {
   cursor: pointer;
 }
 
+/* ─── ERROR MESSAGE ───────────────────────────────────────────────────── */
 .error {
   text-align: center;
   color: #f55;
   margin-top: 2rem;
 }
 
-/* ─── MOBILE RESPONSIVE (unchanged from original) ───────────────────────────────────────── */
+/* ─── MOBILE RESPONSIVE STYLES ───────────────────────────────────────── */
 @media (max-width: 768px) {
   .container {
     display: block;
@@ -290,7 +298,7 @@ html, body {
     font-size: 3rem;
   }
 
-  /* ↓ Halve bio paragraph size on mobile ↓ */
+  /* Halve bio paragraph size on mobile */
   .bio-section p {
     font-size: 1.1rem;
   }
@@ -305,7 +313,7 @@ html, body {
   }
 }
 
-/* ─── NEW: FORCE “Mixes” TO APPEAR ON MOBILE ──────────────────────────── */
+/* ─── FORCE “MIXES” VISIBLE ON MOBILE ─────────────────────────────────── */
 @media (max-width: 768px) {
   .mixes-section {
     display: block !important;
