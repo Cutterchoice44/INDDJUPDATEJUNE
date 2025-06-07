@@ -54,9 +54,7 @@ async function initPage() {
   const tags = Array.isArray(artist.tags)
     ? artist.tags.map(t => String(t).toLowerCase())
     : [];
-  if (!tags.includes("website")) {
-    return showNotFound();
-  }
+  if (!tags.includes("website")) return showNotFound();
 
   // 3) Name
   document.getElementById("dj-name").textContent = artist.name || "";
@@ -134,23 +132,22 @@ async function initPage() {
     console.error("Schedule error:", err);
   }
 
-  // 8) Mixcloud archive persistence (using your PHP endpoints)
+  // 8) Mixcloud archive persistence
   const listEl = document.getElementById("mixes-list");
   const addBtn = document.getElementById("add-show-btn");
   const input  = document.getElementById("mixcloud-url-input");
 
-  // Load & display just this DJ’s mixes
   async function loadShows() {
     listEl.innerHTML = "";
     let shows = [];
     try {
-      // hit your PHP get_archives endpoint, with cache‐buster
+      // fetch only this DJ’s shows
       const res = await fetch(
         `get_archives.php?artistId=${artistId}&_=${Date.now()}`,
         { cache: "no-store" }
       );
       if (!res.ok) throw new Error(res.statusText);
-      shows = await res.json();  // expect [{ url, added }, …]
+      shows = await res.json();  // -> [{url, added},…]
     } catch (e) {
       console.error("Couldn’t load archives:", e);
       listEl.textContent = "Couldn’t load shows.";
@@ -185,14 +182,11 @@ async function initPage() {
         if (prompt("Enter password to remove this show:") !== MIXCLOUD_PW) {
           return alert("Incorrect password");
         }
-        const form = new FormData();
-        form.append("artistId", artistId);
-        form.append("url", show.url);
-
+        const body = new URLSearchParams({ artistId, url: show.url });
         try {
           const r = await fetch("delete_archive.php", {
             method: "POST",
-            body: form,
+            body,
             cache: "no-store"
           });
           if (!r.ok) throw new Error(r.statusText);
@@ -208,25 +202,19 @@ async function initPage() {
     });
   }
 
-  // initial load
   loadShows();
 
-  // “Add show” handler
   addBtn.onclick = async () => {
     if (prompt("Enter password to add a show:") !== MIXCLOUD_PW) {
       return alert("Incorrect password");
     }
     const u = input.value.trim();
     if (!u) return;
-
-    const form = new FormData();
-    form.append("artistId", artistId);
-    form.append("url", u);
-
+    const body = new URLSearchParams({ artistId, url: u });
     try {
       const r = await fetch("add_archive.php", {
         method: "POST",
-        body: form,
+        body,
         cache: "no-store"
       });
       if (!r.ok) throw new Error(r.statusText);
