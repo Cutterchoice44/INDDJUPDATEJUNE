@@ -39,20 +39,20 @@ async function initPage() {
       { headers: { "x-api-key": API_KEY } }
     );
     if (!r.ok) {
-      if (r.status===404) return showNotFound();
+      if (r.status === 404) return showNotFound();
       throw new Error(`Artist API ${r.status}`);
     }
     const body = await r.json();
     artist = body.artist || body.data || body;
     if (artist.attributes) artist = { ...artist, ...artist.attributes };
-  } catch(err) {
+  } catch (err) {
     console.error(err);
     return showError();
   }
 
   // 2) Must have WEBSITE tag
   const tags = Array.isArray(artist.tags)
-    ? artist.tags.map(t=>String(t).toLowerCase())
+    ? artist.tags.map(t => String(t).toLowerCase())
     : [];
   if (!tags.includes("website")) {
     return showNotFound();
@@ -69,34 +69,34 @@ async function initPage() {
   }
   let bioHtml = "";
   if (raw) {
-    if (typeof raw==="object" && Array.isArray(raw.content)) {
+    if (typeof raw === "object" && Array.isArray(raw.content)) {
       const extract = node =>
         node.text ||
-        (node.content||[]).map(extract).join("") ||
+        (node.content || []).map(extract).join("") ||
         "";
-      bioHtml = raw.content.map(blk=>`<p>${extract(blk)}</p>`).join("");
-    } else if (typeof raw==="string") {
+      bioHtml = raw.content.map(blk => `<p>${extract(blk)}</p>`).join("");
+    } else if (typeof raw === "string") {
       bioHtml = /<[a-z][\s\S]*>/i.test(raw)
         ? raw
-        : raw.split(/\r?\n+/).map(p=>`<p>${p}</p>`).join("");
+        : raw.split(/\r?\n+/).map(p => `<p>${p}</p>`).join("");
     }
   }
   bioEl.innerHTML = bioHtml || `<p>No bio available.</p>`;
 
   // 5) Artwork
   const art = document.getElementById("dj-artwork");
-  art.src = artist.logo?.["512x512"]||artist.logo?.default||artist.avatar||FALLBACK_ART;
-  art.alt = artist.name||"";
+  art.src = artist.logo?.["512x512"] || artist.logo?.default || artist.avatar || FALLBACK_ART;
+  art.alt = artist.name || "";
 
   // 6) Social links
   const sl = document.getElementById("social-links");
   sl.innerHTML = "";
-  for (const [plat,url] of Object.entries(artist.socials||{})) {
+  for (const [plat, url] of Object.entries(artist.socials || {})) {
     if (!url) continue;
-    const label = plat.replace(/Handle$/,"").replace(/([A-Z])/g," $1").trim();
+    const label = plat.replace(/Handle$/, "").replace(/([A-Z])/g, " $1").trim();
     const li = document.createElement("li");
     li.innerHTML = `<a href="${url}" target="_blank" rel="noopener">
-      ${label.charAt(0).toUpperCase()+label.slice(1)}
+      ${label.charAt(0).toUpperCase() + label.slice(1)}
     </a>`;
     sl.appendChild(li);
   }
@@ -107,16 +107,16 @@ async function initPage() {
   calBtn.onclick  = null;
   try {
     const now     = new Date().toISOString();
-    const inOneYr = new Date(Date.now()+365*24*60*60*1000).toISOString();
+    const inOneYr = new Date(Date.now() + 365*24*60*60*1000).toISOString();
     const r2 = await fetch(
-      `${BASE_URL}/station/${STATION_ID}/artists/${artistId}/schedule`
-      + `?startDate=${now}&endDate=${inOneYr}`,
-      { headers:{ "x-api-key": API_KEY } }
+      `${BASE_URL}/station/${STATION_ID}/artists/${artistId}/schedule` +
+      `?startDate=${now}&endDate=${inOneYr}`,
+      { headers: { "x-api-key": API_KEY } }
     );
     if (r2.ok) {
-      const { schedules=[] } = await r2.json();
+      const { schedules = [] } = await r2.json();
       if (schedules.length) {
-        const { startDateUtc,endDateUtc } = schedules[0];
+        const { startDateUtc, endDateUtc } = schedules[0];
         calBtn.disabled = false;
         calBtn.onclick = () => {
           window.open(
@@ -124,13 +124,14 @@ async function initPage() {
               `DJ ${artist.name} Live Set`,
               startDateUtc,
               endDateUtc
-            ), "_blank"
+            ),
+            "_blank"
           );
         };
       }
     }
-  } catch(err) {
-    console.error("Schedule error:",err);
+  } catch (err) {
+    console.error("Schedule error:", err);
   }
 
   // 8) Mixcloud archive persistence (using your PHP endpoints)
@@ -138,18 +139,18 @@ async function initPage() {
   const addBtn = document.getElementById("add-show-btn");
   const input  = document.getElementById("mixcloud-url-input");
 
-  // Load & display this DJ’s mixes
+  // Load & display just this DJ’s mixes
   async function loadShows() {
     listEl.innerHTML = "";
     let shows = [];
     try {
-      // hit your PHP script (no caching)
+      // hit your PHP get_archives endpoint, with cache‐buster
       const res = await fetch(
-        `/get_archives.php?artistId=${artistId}&_=${Date.now()}`,
+        `get_archives.php?artistId=${artistId}&_=${Date.now()}`,
         { cache: "no-store" }
       );
       if (!res.ok) throw new Error(res.statusText);
-      shows = await res.json();  // expect [{url,added}, …]
+      shows = await res.json();  // expect [{ url, added }, …]
     } catch (e) {
       console.error("Couldn’t load archives:", e);
       listEl.textContent = "Couldn’t load shows.";
@@ -189,9 +190,10 @@ async function initPage() {
         form.append("url", show.url);
 
         try {
-          const r = await fetch("/delete_archive.php", {
+          const r = await fetch("delete_archive.php", {
             method: "POST",
-            body: form
+            body: form,
+            cache: "no-store"
           });
           if (!r.ok) throw new Error(r.statusText);
           await loadShows();
@@ -209,7 +211,7 @@ async function initPage() {
   // initial load
   loadShows();
 
-  // Add-show handler
+  // “Add show” handler
   addBtn.onclick = async () => {
     if (prompt("Enter password to add a show:") !== MIXCLOUD_PW) {
       return alert("Incorrect password");
@@ -222,9 +224,10 @@ async function initPage() {
     form.append("url", u);
 
     try {
-      const r = await fetch("/add_archive.php", {
+      const r = await fetch("add_archive.php", {
         method: "POST",
-        body: form
+        body: form,
+        cache: "no-store"
       });
       if (!r.ok) throw new Error(r.statusText);
       input.value = "";
