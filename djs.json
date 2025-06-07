@@ -1,49 +1,22 @@
-{
-  "djs": [
-    {
-      "id": "25b015d2-01a5-4abb-8e2c-c5d425e0483d",
-      "name": "ArchieTech",
-      "bio": "<p>ArchieTech, the Tasmanian Connection, has been delivering electro-breakbeat since the 90s…</p>",
-      "artworkUrl": "https://i.imgur.com/archietech.jpg",
-      "socials": [
-        { "name": "Facebook",   "url": "https://facebook.com/archietech" },
-        { "name": "Instagram",  "url": "https://instagram.com/archietech" }
-      ],
-      "nextEvent": "2025-05-25T07:00:00Z",
-      "profileUrl": "https://cutterschoiceradio.nz/index_IND_DJ.html?id=25b015d2-01a5-4abb-8e2c-c5d425e0483d",
-      "mixes": [
-        "https://www.mixcloud.com/archietech/sunday-sets-2025/",
-        "https://www.mixcloud.com/archietech/special-eklektik/"
-      ]
-    },
-    {
-      "id": "2fa20f0e-5fd7-462b-8cb5-1ae6f8edb763",
-      "name": "Armands Melkis",
-      "bio": "<p>Armands Melkis brings deep-house and soulful grooves every Sunday evening…</p>",
-      "artworkUrl": "https://i.imgur.com/armandsmelkis.jpg",
-      "socials": [
-        { "name": "SoundCloud", "url": "https://soundcloud.com/armandsmelkis" }
-      ],
-      "nextEvent": "2025-05-26T05:00:00Z",
-      "profileUrl": "https://cutterschoiceradio.nz/index_IND_DJ.html?id=2fa20f0e-5fd7-462b-8cb5-1ae6f8edb763",
-      "mixes": [
-        "https://www.mixcloud.com/armandsmelkis/get-in-the-groove-sunday/"
-      ]
-    },
-    {
-      "id": "5b4d1c12-9e11-4a43-bb21-7f9e0efb9a33",
-      "name": "Barrcode",
-      "bio": "<p>Barrcode presents live und direkt from Thursday 5–7 pm, spinning industrial techno…</p>",
-      "artworkUrl": "https://i.imgur.com/barrcode.jpg",
-      "socials": [
-        { "name": "Facebook",  "url": "https://facebook.com/barrcode" },
-        { "name": "Instagram", "url": "https://instagram.com/barrcode" }
-      ],
-      "nextEvent": "2025-05-23T04:00:00Z",
-      "profileUrl": "https://cutterschoiceradio.nz/index_IND_DJ.html?id=5b4d1c12-9e11-4a43-bb21-7f9e0efb9a33",
-      "mixes": [
-        "https://www.mixcloud.com/barrcode/raw-techno-live/"
-      ]
-    }
-  ]
+<?php
+header('Content-Type: application/json');
+
+// 1) Grab & sanitize the artistId (if any)
+$artist = filter_input(INPUT_GET, 'artistId', FILTER_SANITIZE_STRING) ?? '';
+
+// 2) Load the full archives array
+$dataFile = __DIR__ . '/archives.json';
+$all = is_readable($dataFile)
+    ? json_decode(file_get_contents($dataFile), true)
+    : [];
+
+// 3) If an artistId was provided, filter down to only that DJ’s entries
+if ($artist !== '') {
+    $all = array_values(array_filter($all, function($e) use ($artist) {
+        // matches URLs containing "/{artistId}-"
+        return strpos($e['url'], "/{$artist}-") !== false;
+    }));
 }
+
+// 4) Return the (filtered) array
+echo json_encode($all);
