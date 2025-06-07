@@ -133,7 +133,7 @@ async function initPage() {
     console.error("Schedule error:",err);
   }
 
-  // 8) Mixcloud archive persistence (server-backed via archives.json + PHP)
+  // 8) Mixcloud archive persistence (using your PHP endpoints)
   const listEl = document.getElementById("mixes-list");
   const addBtn = document.getElementById("add-show-btn");
   const input  = document.getElementById("mixcloud-url-input");
@@ -141,29 +141,27 @@ async function initPage() {
   // Load & display this DJ’s mixes
   async function loadShows() {
     listEl.innerHTML = "";
-    let allShows = [];
+    let shows = [];
     try {
-      // cache-bust to avoid stale JSON in Firefox
-      const res = await fetch(`/archives.json?_=${Date.now()}`, { cache: "no-store" });
+      // hit your PHP script (no caching)
+      const res = await fetch(
+        `/get_archives.php?artistId=${artistId}&_=${Date.now()}`,
+        { cache: "no-store" }
+      );
       if (!res.ok) throw new Error(res.statusText);
-      allShows = await res.json();  // [ { url, added }, … ]
+      shows = await res.json();  // expect [{url,added}, …]
     } catch (e) {
-      console.error("Failed to load archives.json:", e);
+      console.error("Couldn’t load archives:", e);
       listEl.textContent = "Couldn’t load shows.";
       return;
     }
 
-    const artistId = new URLSearchParams(location.search).get("id");
-    const myShows  = allShows.filter(s =>
-      new URL(s.url).pathname.includes(`/${artistId}-`)
-    );
-
-    if (myShows.length === 0) {
+    if (shows.length === 0) {
       listEl.textContent = "No mixes yet.";
       return;
     }
 
-    myShows.forEach(show => {
+    shows.forEach(show => {
       const wrapper = document.createElement("div");
       wrapper.className = "mix-show";
 
@@ -191,11 +189,11 @@ async function initPage() {
         form.append("url", show.url);
 
         try {
-          const delRes = await fetch("/delete_archive.php", {
+          const r = await fetch("/delete_archive.php", {
             method: "POST",
             body: form
           });
-          if (!delRes.ok) throw new Error(delRes.statusText);
+          if (!r.ok) throw new Error(r.statusText);
           await loadShows();
         } catch (err) {
           console.error("Error removing show:", err);
@@ -208,7 +206,7 @@ async function initPage() {
     });
   }
 
-  // Initial load
+  // initial load
   loadShows();
 
   // Add-show handler
@@ -219,17 +217,16 @@ async function initPage() {
     const u = input.value.trim();
     if (!u) return;
 
-    const artistId = new URLSearchParams(location.search).get("id");
-    const form     = new FormData();
+    const form = new FormData();
     form.append("artistId", artistId);
     form.append("url", u);
 
     try {
-      const postRes = await fetch("/add_archive.php", {
+      const r = await fetch("/add_archive.php", {
         method: "POST",
         body: form
       });
-      if (!postRes.ok) throw new Error(postRes.statusText);
+      if (!r.ok) throw new Error(r.statusText);
       input.value = "";
       await loadShows();
     } catch (err) {
@@ -237,7 +234,6 @@ async function initPage() {
       alert("Couldn’t save. Try again later.");
     }
   };
-
-} // end initPage
+}
 
 window.addEventListener("DOMContentLoaded", initPage);
