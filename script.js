@@ -20,7 +20,7 @@ function showError() {
 }
 function createGoogleCalLink(title, s, e) {
   if (!s||!e) return "#";
-  const fmt = dt=>new Date(dt).toISOString().replace(/-|:|\.\d{3}/g,'');
+  const fmt = dt => new Date(dt).toISOString().replace(/-|:|\.\d{3}/g,'');
   return `https://www.google.com/calendar/render?action=TEMPLATE`
        + `&text=${encodeURIComponent(title)}`
        + `&dates=${fmt(s)}/${fmt(e)}`;
@@ -132,34 +132,34 @@ async function initPage() {
     console.error("Schedule error:", err);
   }
 
-  // 8) Mixcloud archive persistence
+  // 8) Mixcloud archive persistence (per-DJ endpoints)
   const listEl = document.getElementById("mixes-list");
   const addBtn = document.getElementById("add-show-btn");
   const input  = document.getElementById("mixcloud-url-input");
 
+  // Load & render this DJ’s shows
   async function loadShows() {
     listEl.innerHTML = "";
     let shows = [];
     try {
-      // fetch only this DJ’s shows
       const res = await fetch(
-        `get_archives.php?artistId=${artistId}&_=${Date.now()}`,
+        `get_dj_archives.php?artistId=${artistId}&_=${Date.now()}`,
         { cache: "no-store" }
       );
       if (!res.ok) throw new Error(res.statusText);
-      shows = await res.json();  // -> [{url, added},…]
+      shows = await res.json();  // -> [ "url1", "url2", … ]
     } catch (e) {
-      console.error("Couldn’t load archives:", e);
+      console.error("Couldn’t load DJ archives:", e);
       listEl.textContent = "Couldn’t load shows.";
       return;
     }
 
-    if (shows.length === 0) {
+    if (!shows.length) {
       listEl.textContent = "No mixes yet.";
       return;
     }
 
-    shows.forEach(show => {
+    shows.forEach(url => {
       const wrapper = document.createElement("div");
       wrapper.className = "mix-show";
 
@@ -167,7 +167,7 @@ async function initPage() {
       Object.assign(iframe, {
         src: "https://www.mixcloud.com/widget/iframe/?" +
              "hide_cover=1&light=1&feed=" +
-             encodeURIComponent(show.url),
+             encodeURIComponent(url),
         width: "100%",
         height: "60",
         frameBorder: "0",
@@ -182,9 +182,9 @@ async function initPage() {
         if (prompt("Enter password to remove this show:") !== MIXCLOUD_PW) {
           return alert("Incorrect password");
         }
-        const body = new URLSearchParams({ artistId, url: show.url });
+        const body = new URLSearchParams({ password: MIXCLOUD_PW, artistId, url });
         try {
-          const r = await fetch("delete_archive.php", {
+          const r = await fetch("delete_dj_archive.php", {
             method: "POST",
             body,
             cache: "no-store"
@@ -202,17 +202,19 @@ async function initPage() {
     });
   }
 
+  // Initial load
   loadShows();
 
+  // Add-show handler
   addBtn.onclick = async () => {
     if (prompt("Enter password to add a show:") !== MIXCLOUD_PW) {
       return alert("Incorrect password");
     }
     const u = input.value.trim();
     if (!u) return;
-    const body = new URLSearchParams({ artistId, url: u });
+    const body = new URLSearchParams({ password: MIXCLOUD_PW, artistId, url: u });
     try {
-      const r = await fetch("add_archive.php", {
+      const r = await fetch("add_dj_archive.php", {
         method: "POST",
         body,
         cache: "no-store"
