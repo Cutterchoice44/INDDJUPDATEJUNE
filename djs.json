@@ -1,22 +1,37 @@
 <?php
 header('Content-Type: application/json');
+const MIXCLOUD_PASSWORD = 'cutters44';
 
-// 1) Grab & sanitize the artistId (if any)
-$artist = filter_input(INPUT_GET, 'artistId', FILTER_SANITIZE_STRING) ?? '';
+// 1) Verify password
+$pwd = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING) ?: '';
+if ($pwd !== MIXCLOUD_PASSWORD) {
+    http_response_code(403);
+    echo json_encode(['error'=>'Forbidden']);
+    exit;
+}
 
-// 2) Load the full archives array
+// 2) Validate & sanitize URL
+$url = filter_input(INPUT_POST, 'url', FILTER_VALIDATE_URL);
+if (!$url) {
+    http_response_code(400);
+    echo json_encode(['error'=>'Invalid URL']);
+    exit;
+}
+
+// 3) Load existing archives
 $dataFile = __DIR__ . '/archives.json';
-$all = is_readable($dataFile)
+$archives = is_readable($dataFile)
     ? json_decode(file_get_contents($dataFile), true)
     : [];
 
-// 3) If an artistId was provided, filter down to only that DJ’s entries
-if ($artist !== '') {
-    $all = array_values(array_filter($all, function($e) use ($artist) {
-        // matches URLs containing "/{artistId}-"
-        return strpos($e['url'], "/{$artist}-") !== false;
-    }));
-}
+// 4) Remove any entry matching exactly this URL
+$archives = array_values(array_filter(
+    $archives,
+    fn($e) => $e['url'] !== $url
+));
 
-// 4) Return the (filtered) array
-echo json_encode($all);
+// 5) Save back to archives.json
+file_put_contents($dataFile, json_encode($archives, JSON_PRETTY_PRINT));
+
+// 6) Return the updated list (unfiltered—main page can re-fetch full file)
+echo json_encode($archives);
